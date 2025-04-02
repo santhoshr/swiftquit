@@ -8,7 +8,7 @@
 import Cocoa
 import LaunchAtLogin
 
-class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate {
+class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, NSDraggingDestination {
     @objc dynamic var launchAtLogin = LaunchAtLogin.kvo
     
     @IBOutlet weak var launchHiddenSwitch: NSSwitch!
@@ -25,6 +25,8 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate {
         view.window?.delegate = self
         
         setupViews()
+        setupDragAndDrop()
+        addDragAndDropHint()
     }
     
     override var representedObject: Any? {
@@ -57,6 +59,69 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate {
         excludedAppsTableView.dataSource = self
         excludedAppsTableView.delegate = self
         
+    }
+    
+    func setupDragAndDrop() {
+        // Register for app bundle and file URL drag types
+        excludedAppsTableView.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
+        
+        // Make the table view a valid drop target
+        excludedAppsTableView.setDraggingSourceOperationMask(.copy, forLocal: false)
+    }
+    
+    // MARK: - Drag and Drop Methods
+    
+    func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        // Check if the dragged item is an app bundle
+        if isDraggingApp(sender) {
+            return .copy
+        }
+        return []
+    }
+    
+    func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        if isDraggingApp(sender) {
+            return .copy
+        }
+        return []
+    }
+    
+    func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        guard let fileURLs = sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] else {
+            return false
+        }
+        
+        var addedAny = false
+        
+        for url in fileURLs {
+            if url.path.hasSuffix(".app") {
+                // Check if the app is not already in the excluded list
+                if !swiftQuitExcludedApps.contains(url.path) {
+                    swiftQuitExcludedApps.append(url.path)
+                    addedAny = true
+                }
+            }
+        }
+        
+        if addedAny {
+            // Update the table view
+            excludedAppsTableView.reloadData()
+            SwiftQuit.updateExcludedApps()
+            return true
+        }
+        
+        return false
+    }
+    
+    private func isDraggingApp(_ sender: NSDraggingInfo) -> Bool {
+        guard let fileURLs = sender.draggingPasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] else {
+            return false
+        }
+        
+        // Check if any of the dragged items are applications
+        return fileURLs.contains { url in
+            return url.path.hasSuffix(".app")
+        }
     }
     
     @IBAction func launchAtLoginToggle(_ sender: Any) {
@@ -179,6 +244,29 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate {
         }
     }
     
+    func addDragAndDropHint() {
+        // Create a hint text field
+        let hintLabel = NSTextField()
+        hintLabel.isEditable = false
+        hintLabel.isBordered = false
+        hintLabel.backgroundColor = .clear
+        hintLabel.drawsBackground = false
+        hintLabel.textColor = .secondaryLabelColor
+        hintLabel.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
+        hintLabel.stringValue = "Tip: Drag and drop applications directly to add them to the list"
+        hintLabel.sizeToFit()
+        
+        // Position it above the table view
+        if let tableView = excludedAppsTableView {
+            hintLabel.frame = NSRect(x: tableView.frame.minX, 
+                                    y: tableView.frame.maxY + 5, 
+                                    width: hintLabel.frame.width, 
+                                    height: hintLabel.frame.height)
+            
+            // Add to the view
+            tableView.superview?.addSubview(hintLabel)
+        }
+    }
 }
 
 extension ViewController: NSTableViewDataSource {
@@ -197,5 +285,68 @@ extension ViewController: NSTableViewDataSource {
             return nil
         }
     }
+}
+
+// Custom table view that accepts application drag and drop
+class DragDestinationTableView: NSTableView {
     
+    private var _isHighlightedForDrag = false
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
+        self.setDraggingSourceOperationMask(.copy, forLocal: false)
+    }
+    
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        let controller = self.delegate as? ViewController
+        let dragOperation = controller?.draggingEntered(sender) ?? []
+        
+        if !dragOperation.isEmpty {
+            _isHighlightedForDrag = true
+            needsDisplay = true
+        }
+        
+        return dragOperation
+    }
+    
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        _isHighlightedForDrag = false
+        needsDisplay = true
+    }
+    
+    override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        let controller = self.delegate as? ViewController
+        return controller?.draggingUpdated(sender) ?? []
+    }
+    
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        _isHighlightedForDrag = false
+        needsDisplay = true
+        
+        let controller = self.delegate as? ViewController
+        return controller?.performDragOperation(sender) ?? false
+    }
+    
+    override func concludeDragOperation(_ sender: NSDraggingInfo?) {
+        // Visual update after drop
+        self.reloadData()
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
+        
+        if _isHighlightedForDrag {
+            // Draw a highlight border when dragging valid app
+            let borderWidth: CGFloat = 2.0
+            let highlightColor = NSColor.systemBlue.withAlphaComponent(0.5)
+            
+            highlightColor.set()
+            
+            let borderRect = bounds.insetBy(dx: borderWidth/2, dy: borderWidth/2)
+            let borderPath = NSBezierPath(roundedRect: borderRect, xRadius: 4, yRadius: 4)
+            borderPath.lineWidth = borderWidth
+            borderPath.stroke()
+        }
+    }
 }
