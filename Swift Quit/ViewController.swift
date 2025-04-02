@@ -256,15 +256,27 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
         hintLabel.stringValue = "Tip: Drag and drop applications directly to add them to the list"
         hintLabel.sizeToFit()
         
-        // Position it above the table view
-        if let tableView = excludedAppsTableView {
-            hintLabel.frame = NSRect(x: tableView.frame.minX, 
-                                    y: tableView.frame.maxY + 5, 
-                                    width: hintLabel.frame.width, 
-                                    height: hintLabel.frame.height)
+        // Position it properly above the table view
+        if let tableView = excludedAppsTableView, let scrollView = tableView.enclosingScrollView {
+            // Add to the container view rather than the table view itself
+            let containerView = scrollView.superview!
             
-            // Add to the view
-            tableView.superview?.addSubview(hintLabel)
+            // Add hint label to view hierarchy
+            containerView.addSubview(hintLabel)
+            
+            // Position hint above the scroll view
+            hintLabel.frame = NSRect(
+                x: scrollView.frame.minX,
+                y: scrollView.frame.minY - hintLabel.frame.height - 4,
+                width: hintLabel.frame.width,
+                height: hintLabel.frame.height
+            )
+            
+            // Set auto-resizing mask to maintain position during window resizing
+            hintLabel.autoresizingMask = [.width, .minYMargin]
+            
+            // Tag it so we can find it later if needed
+            hintLabel.tag = 1001
         }
     }
 }
