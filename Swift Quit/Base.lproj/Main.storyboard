@@ -709,40 +709,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="459" height="362"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="sxz-6t-zUP">
-                                <rect key="frame" x="28" y="314" width="36" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="sxz-6t-zUP">
                                 <connections>
                                     <action selector="launchAtLoginToggle:" target="XfG-lQ-9wD" id="gni-dm-Awn"/>
                                     <binding destination="NFW-oP-p1K" name="value" keyPath="values.launchAtLogin.isEnabled" id="H53-I2-HiE"/>
                                 </connections>
                             </switch>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ICr-lq-5Ag">
-                                <rect key="frame" x="71" y="317" width="183" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ICr-lq-5Ag">
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Start Swift Quit Automatically" id="F0t-LT-dKo">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yfr-1e-je9">
-                                <rect key="frame" x="386" y="286" width="48" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Yfr-1e-je9">
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Icon256" id="1B3-ha-wxW"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="img-width"/>
+                                    <constraint firstAttribute="height" constant="48" id="img-height"/>
+                                </constraints>
                             </imageView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jpv-fI-EXo">
-                                <rect key="frame" x="394" y="267" width="32" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jpv-fI-EXo">
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="v 1.5" id="6SP-te-joH">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gQS-hZ-61c">
-                                <rect key="frame" x="29" y="30" width="364" height="176"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cbd-new-label">
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Smart close empty instances" id="cbd-new-cell">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="cbd-new-switch">
+                                <connections>
+                                    <action selector="closeEmptyIfExemptedToggle:" target="XfG-lQ-9wD" id="cbd-new-action"/>
+                                </connections>
+                            </switch>
+                            <box boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="cbd-sep">
+                            </box>
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gQS-hZ-61c">
                                 <clipView key="contentView" focusRingType="none" id="I7C-cG-mpl">
                                     <rect key="frame" x="1" y="1" width="362" height="174"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -780,56 +788,52 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button identifier="addWhitelistAppBtn" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JJN-0m-2PI">
-                                <rect key="frame" x="406" y="183" width="23" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button identifier="addWhitelistAppBtn" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JJN-0m-2PI">
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8oq-Ei-7O1">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="23" id="add-btn-width"/>
+                                    <constraint firstAttribute="height" constant="24" id="add-btn-height"/>
+                                </constraints>
                                 <connections>
                                     <action selector="addExcludedApp:" target="XfG-lQ-9wD" id="jqZ-Wj-afe"/>
                                 </connections>
                             </button>
-                            <button identifier="removeWhitelistAppBtn" hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iSS-4h-sXR">
-                                <rect key="frame" x="406" y="153" width="23" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <button identifier="removeWhitelistAppBtn" hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iSS-4h-sXR">
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSMenuMixedStateTemplate" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="SKa-Oq-wFQ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="23" id="rem-btn-width"/>
+                                    <constraint firstAttribute="height" constant="24" id="rem-btn-height"/>
+                                </constraints>
                                 <connections>
                                     <action selector="removeExcludedApp:" target="XfG-lQ-9wD" id="srF-Za-zJv"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rXe-IF-9lm" userLabel="Exclude Behaviour Label">
-                                <rect key="frame" x="28" y="222" width="30" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rXe-IF-9lm" userLabel="Exclude Behaviour Label">
                                 <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" title="Quit" id="TN8-1K-EUF">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="systemGrayColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="se9-ao-qJt">
-                                <rect key="frame" x="28" y="284" width="36" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="se9-ao-qJt">
                                 <connections>
                                     <action selector="displayMenubarIconToggle:" target="XfG-lQ-9wD" id="N2u-as-ZMx"/>
                                 </connections>
                             </switch>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TaF-kw-tci">
-                                <rect key="frame" x="71" y="287" width="149" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TaF-kw-tci">
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Display Icon in Menubar" id="ry4-hY-SU5">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-bL-2yh" userLabel="Exclude Behaviour Popup">
-                                <rect key="frame" x="70" y="216" width="222" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YLn-bL-2yh" userLabel="Exclude Behaviour Popup">
                                 <popUpButtonCell key="cell" type="push" title="All Apps Except The Following" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="qiF-4g-w2A" id="81e-vT-UiD" userLabel="Only The Following Apps">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
@@ -844,16 +848,12 @@
                                     <action selector="changeExcludeBehaviour:" target="XfG-lQ-9wD" id="VFp-hm-R8T"/>
                                 </connections>
                             </popUpButton>
-                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="gmf-h2-qQq" userLabel="Launch Hidden Switch">
-                                <rect key="frame" x="28" y="254" width="36" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="gmf-h2-qQq" userLabel="Launch Hidden Switch">
                                 <connections>
                                     <action selector="launchHiddenToggle:" target="XfG-lQ-9wD" id="Xu3-7h-zGE"/>
                                 </connections>
                             </switch>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D4a-wa-IuM">
-                                <rect key="frame" x="71" y="257" width="128" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="D4a-wa-IuM">
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Hide App on Startup" id="GWv-jd-m1v">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -861,6 +861,63 @@
                                 </textFieldCell>
                             </textField>
                         </subviews>
+                        <constraints>
+                            <!-- Launch at Login switch and label -->
+                            <constraint firstItem="sxz-6t-zUP" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="28" id="launch-switch-leading"/>
+                            <constraint firstItem="sxz-6t-zUP" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="27" id="launch-switch-top"/>
+                            <constraint firstItem="ICr-lq-5Ag" firstAttribute="leading" secondItem="sxz-6t-zUP" secondAttribute="trailing" constant="7" id="launch-label-leading"/>
+                            <constraint firstItem="ICr-lq-5Ag" firstAttribute="centerY" secondItem="sxz-6t-zUP" secondAttribute="centerY" id="launch-label-center"/>
+                            
+                            <!-- Display menubar icon switch and label -->
+                            <constraint firstItem="se9-ao-qJt" firstAttribute="leading" secondItem="sxz-6t-zUP" secondAttribute="leading" id="menubar-switch-leading"/>
+                            <constraint firstItem="se9-ao-qJt" firstAttribute="top" secondItem="sxz-6t-zUP" secondAttribute="bottom" constant="8" id="menubar-switch-top"/>
+                            <constraint firstItem="TaF-kw-tci" firstAttribute="leading" secondItem="se9-ao-qJt" secondAttribute="trailing" constant="7" id="menubar-label-leading"/>
+                            <constraint firstItem="TaF-kw-tci" firstAttribute="centerY" secondItem="se9-ao-qJt" secondAttribute="centerY" id="menubar-label-center"/>
+                            
+                            <!-- Launch hidden switch and label -->
+                            <constraint firstItem="gmf-h2-qQq" firstAttribute="leading" secondItem="se9-ao-qJt" secondAttribute="leading" id="hidden-switch-leading"/>
+                            <constraint firstItem="gmf-h2-qQq" firstAttribute="top" secondItem="se9-ao-qJt" secondAttribute="bottom" constant="8" id="hidden-switch-top"/>
+                            <constraint firstItem="D4a-wa-IuM" firstAttribute="leading" secondItem="gmf-h2-qQq" secondAttribute="trailing" constant="7" id="hidden-label-leading"/>
+                            <constraint firstItem="D4a-wa-IuM" firstAttribute="centerY" secondItem="gmf-h2-qQq" secondAttribute="centerY" id="hidden-label-center"/>
+                            
+                            <!-- Smart close switch and label -->
+                            <constraint firstItem="cbd-new-switch" firstAttribute="leading" secondItem="gmf-h2-qQq" secondAttribute="leading" id="smart-switch-leading"/>
+                            <constraint firstItem="cbd-new-switch" firstAttribute="top" secondItem="gmf-h2-qQq" secondAttribute="bottom" constant="8" id="smart-switch-top"/>
+                            <constraint firstItem="cbd-new-label" firstAttribute="leading" secondItem="cbd-new-switch" secondAttribute="trailing" constant="7" id="smart-label-leading"/>
+                            <constraint firstItem="cbd-new-label" firstAttribute="centerY" secondItem="cbd-new-switch" secondAttribute="centerY" id="smart-label-center"/>
+                            
+                            <!-- Separator -->
+                            <constraint firstItem="cbd-sep" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="sep-leading"/>
+                            <constraint firstItem="cbd-sep" firstAttribute="trailing" secondItem="m2S-Jp-Qdl" secondAttribute="trailing" constant="-20" id="sep-trailing"/>
+                            <constraint firstItem="cbd-sep" firstAttribute="top" secondItem="cbd-new-switch" secondAttribute="bottom" constant="12" id="sep-top"/>
+                            
+                            <!-- Quit label and popup -->
+                            <constraint firstItem="rXe-IF-9lm" firstAttribute="leading" secondItem="cbd-new-switch" secondAttribute="leading" id="quit-label-leading"/>
+                            <constraint firstItem="rXe-IF-9lm" firstAttribute="top" secondItem="cbd-sep" secondAttribute="bottom" constant="8" id="quit-label-top"/>
+                            <constraint firstItem="YLn-bL-2yh" firstAttribute="leading" secondItem="rXe-IF-9lm" secondAttribute="trailing" constant="12" id="popup-leading"/>
+                            <constraint firstItem="YLn-bL-2yh" firstAttribute="centerY" secondItem="rXe-IF-9lm" secondAttribute="centerY" id="popup-center"/>
+                            <constraint firstItem="YLn-bL-2yh" firstAttribute="width" constant="222" id="popup-width"/>
+                            
+                            <!-- Table view and buttons -->
+                            <constraint firstItem="gQS-hZ-61c" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="table-leading"/>
+                            <constraint firstItem="gQS-hZ-61c" firstAttribute="trailing" secondItem="JJN-0m-2PI" secondAttribute="leading" constant="-8" id="table-trailing"/>
+                            <constraint firstItem="gQS-hZ-61c" firstAttribute="top" secondItem="YLn-bL-2yh" secondAttribute="bottom" constant="12" id="table-top"/>
+                            <constraint firstItem="gQS-hZ-61c" firstAttribute="bottom" secondItem="m2S-Jp-Qdl" secondAttribute="bottom" constant="-50" id="table-bottom"/>
+                            
+                            <!-- Add button -->
+                            <constraint firstItem="JJN-0m-2PI" firstAttribute="trailing" secondItem="m2S-Jp-Qdl" secondAttribute="trailing" constant="-30" id="add-btn-trailing"/>
+                            <constraint firstItem="JJN-0m-2PI" firstAttribute="top" secondItem="gQS-hZ-61c" secondAttribute="top" constant="8" id="add-btn-top"/>
+                            
+                            <!-- Remove button -->
+                            <constraint firstItem="iSS-4h-sXR" firstAttribute="trailing" secondItem="JJN-0m-2PI" secondAttribute="trailing" id="rem-btn-trailing"/>
+                            <constraint firstItem="iSS-4h-sXR" firstAttribute="top" secondItem="JJN-0m-2PI" secondAttribute="bottom" constant="6" id="rem-btn-top"/>
+                            
+                            <!-- App icon and version -->
+                            <constraint firstItem="Yfr-1e-je9" firstAttribute="trailing" secondItem="m2S-Jp-Qdl" secondAttribute="trailing" constant="-28" id="icon-trailing"/>
+                            <constraint firstItem="Yfr-1e-je9" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="27" id="icon-top"/>
+                            <constraint firstItem="jpv-fI-EXo" firstAttribute="centerX" secondItem="Yfr-1e-je9" secondAttribute="centerX" id="version-center-x"/>
+                            <constraint firstItem="jpv-fI-EXo" firstAttribute="top" secondItem="Yfr-1e-je9" secondAttribute="bottom" constant="4" id="version-top"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="displayMenubarIcon" destination="se9-ao-qJt" id="He7-hI-qeh"/>
@@ -870,6 +927,7 @@
                         <outlet property="launchAtLoginSwitch" destination="sxz-6t-zUP" id="J4E-Qp-JFm"/>
                         <outlet property="launchHiddenSwitch" destination="gmf-h2-qQq" id="BmN-4k-8TR"/>
                         <outlet property="removeExcludedAppButtonOutlet" destination="iSS-4h-sXR" id="CeX-us-HM7"/>
+                        <outlet property="closeEmptyIfExemptedSwitch" destination="cbd-new-switch" id="cbd-new-conn"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

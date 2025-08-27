@@ -18,6 +18,7 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
     @IBOutlet weak var excludedAppsTableView: NSTableView!
     @IBOutlet weak var removeExcludedAppButtonOutlet: NSButton!
     @IBOutlet weak var launchAtLoginSwitch: NSSwitch!
+    @IBOutlet weak var closeEmptyIfExemptedSwitch: NSSwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +46,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
         
         if(swiftQuitSettings["launchHidden"] == "true"){
             launchHiddenSwitch.state = NSControl.StateValue.on
+        }
+        
+        if(swiftQuitSettings["smartCloseEnabled"] == "true"){
+            closeEmptyIfExemptedSwitch.state = .on
+        } else {
+            closeEmptyIfExemptedSwitch.state = .off
         }
         
         excludeBehaviourLabelOutlet.textColor = .labelColor
@@ -170,6 +177,14 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
         }
     }
     
+    @IBAction func closeEmptyIfExemptedToggle(_ sender: Any) {
+        if closeEmptyIfExemptedSwitch.state == .on {
+            SwiftQuit.enableSmartClose()
+        } else {
+            SwiftQuit.disableSmartClose()
+        }
+    }
+    
     @IBAction func changeExcludeBehaviour(_ sender: Any) {
         
         if(excludeBehaviourPopupOutlet.title == "All Apps Except The Following"){
@@ -254,9 +269,9 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
         hintLabel.textColor = .secondaryLabelColor
         hintLabel.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
         hintLabel.stringValue = "Tip: Drag and drop applications directly to add them to the list"
-        hintLabel.sizeToFit()
+        hintLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        // Position it properly above the table view
+        // Position it at the bottom of the settings panel using Auto Layout
         if let tableView = excludedAppsTableView, let scrollView = tableView.enclosingScrollView {
             // Add to the container view rather than the table view itself
             let containerView = scrollView.superview!
@@ -264,16 +279,12 @@ class ViewController: NSViewController, NSTableViewDelegate, NSWindowDelegate, N
             // Add hint label to view hierarchy
             containerView.addSubview(hintLabel)
             
-            // Position hint above the scroll view
-            hintLabel.frame = NSRect(
-                x: scrollView.frame.minX,
-                y: scrollView.frame.minY - hintLabel.frame.height - 4,
-                width: hintLabel.frame.width,
-                height: hintLabel.frame.height
-            )
-            
-            // Set auto-resizing mask to maintain position during window resizing
-            hintLabel.autoresizingMask = [.width, .minYMargin]
+            // Set up Auto Layout constraints to place it at the bottom
+            NSLayoutConstraint.activate([
+                hintLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                hintLabel.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 8),
+                hintLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -20)
+            ])
             
             // Tag it so we can find it later if needed
             hintLabel.tag = 1001

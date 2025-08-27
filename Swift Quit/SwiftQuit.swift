@@ -18,7 +18,20 @@ class SwiftQuit {
      */
     
     @objc class func getSettings() -> [String:String] {
-        return userDefaults.object(forKey: "SwiftQuitSettings") as? [String:String] ?? ["launchAtLogin":"false","menubarIconEnabled":"true","excludeBehaviour":"excludeApps","launchHidden":"true"]
+        var settings = userDefaults.object(forKey: "SwiftQuitSettings") as? [String:String] ?? [
+            "launchAtLogin":"false",
+            "menubarIconEnabled":"true",
+            "excludeBehaviour":"excludeApps",
+            "launchHidden":"true",
+            "smartCloseEnabled":"false"
+        ]
+        // Migrate legacy key if present
+        if settings["smartCloseEnabled"] == nil, let legacy = settings["closeEmptyInstanceIfExemptedAndMultiple"] {
+            settings["smartCloseEnabled"] = legacy
+            settings.removeValue(forKey: "closeEmptyInstanceIfExemptedAndMultiple")
+            userDefaults.set(settings, forKey: "SwiftQuitSettings")
+        }
+        return settings
     }
     
     @objc class func updateSettings(){
@@ -70,6 +83,16 @@ class SwiftQuit {
         updateSettings()
     }
     
+    @objc class func enableSmartClose(){
+        swiftQuitSettings["smartCloseEnabled"] = "true"
+        updateSettings()
+    }
+    
+    @objc class func disableSmartClose(){
+        swiftQuitSettings["smartCloseEnabled"] = "false"
+        updateSettings()
+    }
+    
     @objc class func activateAutomaticAppClosing(){
         swindler.on { (event: WindowDestroyedEvent) in
             if !event.window.application.knownWindows.isEmpty {
@@ -100,7 +123,7 @@ class SwiftQuit {
                 let excludedServices:[String] = ["/System/Library/CoreServices/Spotlight.app","/System/Library/CoreServices/Finder.app","/System/Library/CoreServices/NotificationCenter.app"];
                 
                 if(!excludedServices.contains(applicationName)){
-                    if (shouldCloseApplication(applicationName: applicationName)) {
+                    if (shouldCloseApplication(applicationName: applicationName, app: app)) {
                         
                         print(applicationName)
                         
@@ -117,8 +140,28 @@ class SwiftQuit {
         
     }
     
-    class func shouldCloseApplication(applicationName:String) -> Bool {
-        return (swiftQuitSettings["excludeBehaviour"] == "excludeApps" && !swiftQuitExcludedApps.contains(applicationName)) || (swiftQuitSettings["excludeBehaviour"] == "includeApps" && swiftQuitExcludedApps.contains(applicationName))
+    class func shouldCloseApplication(applicationName:String, app: NSRunningApplication) -> Bool {
+        let excludeBehaviour = swiftQuitSettings["excludeBehaviour"]
+        let isInList = swiftQuitExcludedApps.contains(applicationName)
+        // Determine normal behavior based on mode
+        // excludeApps: list = left running (excluded), others = close
+        // includeApps: list = close, others = left running
+        let normallyCloses: Bool = (excludeBehaviour == "excludeApps") ? !isInList : isInList
+        
+        if normallyCloses {
+            return true
+        }
+        
+        // App is normally left running. Apply special flag if enabled: close empty instance when multiple instances exist.
+        if swiftQuitSettings["smartCloseEnabled"] == "true" {
+            if let bundleId = app.bundleIdentifier {
+                let running = NSRunningApplication.runningApplications(withBundleIdentifier: bundleId)
+                if running.count > 1 {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     class func terminateApplication(app:NSRunningApplication) {
